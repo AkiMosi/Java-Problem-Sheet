@@ -1,0 +1,78 @@
+@ -0,0 +1,77 @@
+import random as rnd
+class OrderItem:
+    def __init__(self,x,y,z):
+        self.upc=x
+        self.quantity=y
+        self.price=z
+    def getCost(self):
+        return self.quantity*self.price
+    
+class Order:
+    __oi=[]
+    def addOrderItem(self,x):
+        self.__oi.append(x)
+    def getTotal(self):
+        total=0
+        for i in range(len(self.__oi)):
+            total+=self.__oi[i].getCost()
+        return total
+    def printOrderItems(self):
+        print(self.__oi)
+        
+class RushOrder(Order):
+    _deliveryDay=0
+    def getTotal(self):
+        tot=super(RushOrder,self).getTotal()
+        if(tot>0):
+            if(self._deliveryDay==1):
+                tot+=25
+            elif(self._deliveryDay==2):
+                tot+=15
+            elif(self._deliveryDay==3):
+                tot+=10
+        return tot
+
+orders=[]
+norm=Order()
+day1=RushOrder()
+day2=RushOrder()
+day3=RushOrder()
+
+while(True):
+    upc_m=input("Enter the UPC code : ")
+    if(upc_m=="done"):
+        print("Thank You")
+        break
+    else:
+        quantity_m=int(input("Enter the Quantity : "))
+        print("Enterred Quantiity : ",quantity_m)
+        price_m=rnd.randint(50,100)
+        print("Basic Price  : ",price_m,"\nNet Price : ",price_m*quantity_m)
+        temp=OrderItem(upc_m,quantity_m,price_m)
+        deliveryDay_m=rnd.randint(1,7)
+        print("Delivery Type : ",deliveryDay_m," Day(s)")
+        if(deliveryDay_m==1):
+            day1.addOrderItem(temp)
+            day1._deliverDay=1
+        elif(deliveryDay_m==2):
+            day2.addOrderItem(temp)
+            day2._deliverDay=2
+        elif(deliveryDay_m==3):
+            day3.addOrderItem(temp)
+            day3._deliverDay=3
+        else:
+            norm.addOrderItem(temp)
+            norm._deliverDay=deliveryDay_m
+orders=[norm,day1,day2,day3]
+summ=0
+for i in range(4):
+    if(i==0):
+        print("Delivery day >3")
+    else:
+        print("Delivery day ",i)
+    orders[i].printOrderItems()
+    summ+=orders[i].getTotal()
+    print("Total for this order : ",orders[i].getTotal())
+
+print("Total cost of all the Orders : ",summ)

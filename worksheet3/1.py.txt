@@ -1,0 +1,94 @@
+import random as rnd
+
+class OrderItem:
+    def __init__(self,x,y,z):
+        self.upc=x
+        self.quantity=y
+        self.price=z
+        
+    def getCost(self):
+        return self.quantity*self.price
+    
+class Order:
+    def __init__(self):
+        self.oi=[]
+        
+    def addOrderItem(self,x):
+        self.oi.append(x)
+        
+    def getTotal(self):
+        total=0
+        for i in range(len(self.oi)):
+            total+=self.oi[i].getCost()
+        return total
+    
+    def printOrderItems(self):
+        print(self.oi)        
+        
+class RushOrder(Order):
+    def __init__(self):
+        self._deliveryDay=0
+        Order.__init__(self)
+        
+    def getTotal(self):
+        tot=super(RushOrder,self).getTotal()
+        
+        if(tot>0):
+            if(self._deliveryDay==1):
+                tot+=25
+            elif(self._deliveryDay==2):
+                tot+=15
+            elif(self._deliveryDay==3):
+                tot+=10
+                
+        return tot
+    
+#driver program
+        
+orders=[]
+orders.append(Order())
+
+for i in range(3):
+    orders.append(RushOrder())
+    
+while(True):
+    upc_m=input("Enter the UPC code : ")
+    
+    if(upc_m=="done"):
+        print("Thank You")
+        break
+    else:
+        quantity_m=int(input("Enter the Quantity : "))
+        print("Enterred Quantiity : ",quantity_m)
+        price_m=rnd.randint(50,100)
+        print("Basic Price  : ",price_m,"\nNet Price : ",price_m*quantity_m)
+        temp=(OrderItem(upc_m,quantity_m,price_m))
+        deliveryDay_m=rnd.randint(1,7)
+        print("Delivery Type : ",deliveryDay_m," Day(s)")
+        
+        if(deliveryDay_m==1):
+            orders[1].addOrderItem(temp)
+            orders[1]._deliverDay=1
+        elif(deliveryDay_m==2):
+            orders[2].addOrderItem(temp)
+            orders[2]._deliverDay=2
+        elif(deliveryDay_m==3):
+            orders[3].addOrderItem(temp)
+            orders[3]._deliverDay=3
+        else:
+            orders[0].addOrderItem(temp)
+            orders[0]._deliverDay=deliveryDay_m
+            
+summ=0
+
+for i in range(4):
+    if(i==0):
+        print("Delivery day >3")
+    else:
+        print("Delivery day ",i)
+        
+    orders[i].printOrderItems()
+    summ+=orders[i].getTotal()
+    print("Total for this order : ",orders[i].getTotal())
+    
+print("Total cost of all the Orders : ",summ)
